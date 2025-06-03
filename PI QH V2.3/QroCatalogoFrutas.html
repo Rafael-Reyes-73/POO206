@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QroFrutas</title>
+    <link rel="icon" href="image/icon/QH.ico">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.css">
+
+    <style>
+.catalogo-container {
+    padding-top: 50px;
+    text-align: center;
+}
+
+.catalogo-title {
+    font-size: 40px;
+    font-weight: bold;
+    font-family: "Poppins";
+    margin-bottom: 20px;
+    background: linear-gradient(45deg, #00BA63, #90D467);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+.catalogo {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.catalogo div {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    width: 100%;
+}
+
+
+        .catalogo div > img {
+            border-radius: 8px;
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 0 10px rgba(62, 234, 28, 0.5));
+        }
+        
+    </style>
+</head>
+
+<body>    
+    
+
+    <div class="main2">
+        
+        <!-- <img src="./image/icon-2.png" alt="" id="element"> 
+        <img src="./image/icon-7.png" alt="" id="icon_element1">
+        <img src="image/icon-19.png" alt="" id="icon_element4">
+        <img src="image/icon-6.png" alt="" id="icon_element5">-->
+        <div id="header">
+            <nav class="navbar">
+                <div class="container">
+                    <ul class="navbar-nav">
+                        <li><a href="usuario.html">Favoritos</a></li>
+                        <li><a href="catalogo.html">My Huerto</a></li>
+                        <li><a href="Perfil.html">Melissa</a></li>                
+                        <li> <img src="image/melisa.png" alt="Perfil" class="imaperfil"></li> 
+                    </ul>
+                    <div class="ham-btn">
+                        <div class="burg"></div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <nav>
+            
+            
+            <div class="logo">
+                <img src="image/img/QroHuerto Logo8.png" alt="">
+            </div>
+            <i class="ri-bar-chart-horizontal-line" id="menu_bars"></i>
+            <ul class="menu">
+                <li><a href="QroHuerto.html">Inicio</a></li>
+                <li><a href="Test.html">Test</a></li>
+                <li><a href="QroPlay.html">QroPlay</a></li>
+                <li><a href="QroCatalogoFrutas.html">Frutas</a></li>
+                <li><a href="QroCatalogoVerdutas.html">Verduras</a></li>
+                    
+                <li>
+                    <i class="ri-menu-3-line" id="toggle_open"></i>
+                </li>
+                
+            </ul>
+
+            <div class="side-menu">
+                <i class="fa-solid fa-xmark" id="toggle_close"></i>
+                <div class="logo">
+                    <img src="./image/img/qrohuertoblanco.png" alt="">
+                </div>
+                <div class="about_info">
+                    <h2>About Us</h2>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe aperiam sequi, cum voluptate minus earum optio? Libero repudiandae exercitationem iure, facere eligendi beatae ex odio voluptatum reprehenderit rerum maiores praesentium.</p>
+                    <button class="about-btn">Consultation</button>
+                </div>
+            </div>
+            
+        </nav>
+
+ <div class="catalogo-container">
+    <h2 class="catalogo-title">Frutas</h2>
+    <div class="catalogo">
+        <div>
+            <img src="image/CARDS//Frutas/CARDAguacate.png" alt="Imagen 1">
+            <img src="image/CARDS//Frutas/CARDDurazno.png" alt="Imagen 2">
+            <img src="image/CARDS//Frutas/CARDFresa.png" alt="Imagen 3">
+            <img src="image/CARDS//Frutas/CARDPiña.png" alt="Imagen 4">
+            <img src="image/CARDS//Frutas/CARDLimon.png" alt="Imagen 5">
+            <img src="image/CARDS//Frutas/CARDMango.png" alt="Imagen 6">
+            <img src="image/CARDS//Frutas/CARDMélon.png" alt="Imagen 7">
+            <img src="image/CARDS//Frutas/CARDMoraAzul.png" alt="Imagen 8">
+            <img src="image/CARDS//Frutas/CARDPapaya.png" alt="Imagen 9">
+            <img src="image/CARDS//Frutas/CARDPepino.png" alt="Imagen 10">
+            <img src="image/CARDS//Frutas/CARDPera.png" alt="Imagen 11">
+            <img src="image/CARDS//Frutas/CARDPlatano.png" alt="Imagen 12">
+            <img src="image/CARDS//Frutas/CARDUva.png" alt="Imagen 13">
+   
+        </div>
+    </div>
+</div>
+    
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

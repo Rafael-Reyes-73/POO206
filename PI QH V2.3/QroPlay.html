@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QroPlay</title>
+    <link rel="stylesheet" href="normalize.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<style>
+
+
+.header-container {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 10px;
+    background-color: transparent; 
+}
+
+.LogoQro {
+    font-weight: bold;
+    width:  100px;
+    height: 100px;
+}
+
+.menu {
+    display: flex;
+    align-items: center; 
+    gap: 10px; 
+}
+
+.menu a {
+    text-decoration: none;
+    color: #FFF;
+    font-size: 16px;
+}
+
+.imgperfil {
+    width: 40px; 
+    height: 40px;
+    border-radius: 50%; 
+    object-fit: cover;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: 'Roboto', sans-serif;
+}
+video{
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    position: absolute;
+}
+img{
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+ul{
+    list-style: none;
+    padding-left: 0;
+}
+a{
+    text-decoration: none;
+    color: white;
+}
+
+.background--banner{
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+}
+.banner{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    position: absolute;
+    background-color: black;
+    background: linear-gradient(0deg, rgb(0, 0, 0) 0%,rgba(0, 0, 0, .9) 1%, rgba(0, 0, 0, 0) 59%, rgba(0, 0, 0, 1) 100%);
+}
+
+
+/* imagotipo */
+.imagotipo{
+    flex: 1;
+    width: 80%;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    gap: 15px;
+}
+.imagotipo--imagen{
+    min-width: 100px;
+    max-height: 100PX;
+}
+.imagotipo--info{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.info{
+  
+  font-family: Arial, Helvetica, sans-serif;
+  color: #FFF;
+  width: 500px;
+}
+
+
+.contruccion{
+    color: white;
+    padding: 10px;
+    font-weight: 900;
+    text-align: center;
+}
+.catalogos{
+    padding-block: 2px;
+    background-color: black;
+    color: white;
+}
+.catalogo--peliculas{
+    width: 95%;
+    margin-inline: auto;
+}
+
+
+
+.side-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: 100vh;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+}
+
+.side-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.side-menu li {
+    margin-bottom: 70px;
+}
+
+.side-menu a {
+    color: white;
+    font-size: 18px;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.side-menu a:hover {
+    color: #1db954; 
+}
+
+.iconplay{
+  width: 40px;
+  height: 40px;
+}
+
+.start-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #fff;
+    border-radius: 5px;
+    background: linear-gradient(45deg, #009729, #70c069);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+.start-btn:hover {
+    filter: brightness(1.2);
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+}
+
+
+</style>
+
+<body>
+
+  <aside class="side-menu">
+    <ul>
+      <li><img class="iconplay" src="Resourses/icon/home.png" alt="FAV"><a href="QroHuerto.html">Inicio</a></li>
+      <li><a href="#"><img class="iconplay" src="Resourses/icon/fav.png" alt="FAV"> Favoritos</a></li>
+      <li><a href="#"><img class="iconplay" src="Resourses/icon/botellas.png" alt="Pla"> Plasticos</a></li>
+      <li><a href="#"><img class="iconplay" src="Resourses/icon/madera.png" alt="Mad"> Madera</a></li>
+      <li><a href="#"><img class="iconplay" src="Resourses/icon/costal.png" alt="Cos"> Costal</a></li>     
+    </ul>
+</aside>
+
+
+    <aside class="background--banner">
+        <video muted autoplay loop poster="Resourses/img/QH1.png">
+            <source src="videos/Cómo EMPEZAR UN HUERTO ORGÁNICO en CASA de CERO paso a paso   SEMILLEROS y PLANTINES.mp4" type="video/mp4">
+            <img src="Resourses/img/QH1.png" alt="Imagen background">
+        </video>
+
+
+
+        
+        <div class="banner">
+          <div class="header-container">
+            <div class="LogoQro">
+                <img src="Resourses/img/QroPlayNeon.png" alt="">
+            </div>
+            <div class="menu">   
+                <a href="#">Melissa</a>
+                    <img class="imgperfil" src="Resourses/img/melisa.png" alt="">
+            </div>
+           
+        </div> 
+        <div class="imagotipo">
+          
+          <div class="imagotipo--imagen">
+              <img src="Resourses/img/QroHuerto Logo8.png" alt="Imagotipo">
+          </div>
+          <div class="info">
+              <p>⏵Aprende a diseñar macetas únicas y un huerto increíble con materiales reciclados como botellas, madera y costales. Descubre videos creativos que transformarán tu espacio en un lugar lleno de vida y estilo.</p>
+              <br>
+              <div class="buttons">
+                <a href="QroPlay.html" class="start-btn">Empezar</a>
+            </div>
+          </div>
+      </div>
+      </div>
+    </aside>
+
+
+    <main class="catalogos">
+        <section class="catalogo--peliculas">
+            <h1>Recomendados</h1>
+            <div class="peliculas" id="populares">
+
+            </div>
+        </section>
+        <section class="catalogo--peliculas">
+            <h3>Lo mas vistos este mes</h3>
+            <div class="peliculas" id="estreno">
+                
+            </div>
+        </section>
+        <section class="catalogo--peliculas">
+            <h3>Videos</h3>
+            <div class="peliculas" id="vistas">
+                
+            </div>
+        </section>
+    </main>
+
+
+
+    <script src="index.js"></script>
+</body>
+</html>

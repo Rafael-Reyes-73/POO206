@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slider Curvo - Variantes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #1a1a1a;
+            font-family: Arial, sans-serif;
+        }
+
+        .slider-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            height: 600px;
+            overflow: hidden;
+        }
+
+        .slider-track {
+            position: absolute;
+            left: 50%;
+            bottom: 40%;
+            transform-style: preserve-3d;
+            transition: transform 0.8s ease-in-out;
+        }
+
+        .slider-item {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.8s ease-in-out;
+        }
+
+        .slider-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .navigation {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: white;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slider-container">
+        <div class="slider-track"></div>
+        <div class="navigation">
+            <button class="nav-btn prev">‹</button>
+            <button class="nav-btn next">›</button>
+        </div>
+    </div>
+
+    <script>
+        const images = [
+            'https://picsum.photos/200/300?1',
+            'https://picsum.photos/200/300?2',
+            'https://picsum.photos/200/300?3',
+            'https://picsum.photos/200/300?4',
+            'https://picsum.photos/200/300?5'
+        ];
+
+        const sliderTrack = document.querySelector('.slider-track');
+        let currentIndex = 0;
+
+        images.forEach((img, index) => {
+            const item = document.createElement('div');
+            item.className = 'slider-item';
+            item.innerHTML = `<img src="${img}" alt="Slide ${index + 1}">`;
+            sliderTrack.appendChild(item);
+        });
+
+        function updatePositions(effect = 'parabola') {
+            const items = document.querySelectorAll('.slider-item');
+            const radius = 300;
+
+            items.forEach((item, index) => {
+                const angle = ((index - currentIndex) * 40) * (Math.PI / 180);
+                let x = Math.sin(angle) * radius;
+                let y = 0;
+
+                if (effect === 'parabola') {
+                    y = -(Math.pow(x / radius, 2) * 100);
+                } else if (effect === 'seno') {
+                    y = Math.sin(angle * 2) * 80;
+                } else if (effect === 'arco') {
+                    y = Math.abs(Math.pow(x / radius, 2) * 100) - 80;
+                }
+
+                item.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        }
+
+        function navigate(direction) {
+            currentIndex = (currentIndex + direction + images.length) % images.length;
+            updatePositions('parabola');
+        }
+
+        document.querySelector('.prev').addEventListener('click', () => navigate(-1));
+        document.querySelector('.next').addEventListener('click', () => navigate(1));
+
+        updatePositions('parabola');
+    </script>
+</body>
+</html>
