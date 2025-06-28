@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario</title>
+</head>
+<body>
+
+    <h2>Formulario de Álbum</h2>
+
+    {% with mensajes= get_flashed_messages() %}
+        {% if mensajes %}
+            {% for msj in mensajes %}
+                <div class="flash">{{ msj }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form action="/guardarAlbum" method="POST">
+        <input type="text" name="txtTitulo" placeholder="Título" value="{{ request.form.txtTitulo }}">
+        {% if err and err.txtTitulo %}
+            <div class="error">{{ err.txtTitulo }}</div>
+        {% endif %}
+
+        <input type="text" name="txtArtista" placeholder="Artista" value="{{ request.form.txtArtista }}">
+        {% if err and err.txtArtista %}
+            <div class="error">{{ err.txtArtista }}</div>
+        {% endif %}
+
+        <input type="number" name="txtYear" placeholder="Año de publicación" value="{{ request.form.txtYear }}">
+        {% if err and err.txtYear %}
+            <div class="error">{{ err.txtYear }}</div>
+        {% endif %}
+
+        <button type="submit">Guardar álbum</button>
+    </form>
+
+    <h3>Lista de Álbumes</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Álbum</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for album in albums %}
+                <tr>
+                    <td>{{ album[0] }}</td>
+                    <td>
+                        <a href="{{ url_for('detalle', id=album[0]) }}">
+                            {{ album[1] }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>
