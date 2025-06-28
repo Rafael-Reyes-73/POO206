@@ -1,69 +1,145 @@
-from flask import Flask,jsonify
+from flask import Flask, jsonify, render_template, request, url_for, flash, redirect
 from flask_mysqldb import MySQL
 import MySQLdb
 
 app = Flask(__name__)
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'ElMejorenBD'
-app.config['MYSQL_DB'] = 'dbflask'
-app.config['MYSQL_PORT'] = 3306 
+
+app.config["MYSQL_HOST"] = "localhost"
+app.config["MYSQL_USER"] = "root"
+app.config["MYSQL_PASSWORD"] = "ElMejorenBD"
+app.config["MYSQL_DB"] = "dbflask"
+app.secret_key = "mysecretkey"
+
 mysql = MySQL(app)
 
-#ruta para probar la conexión a la base de datos
-@app.route('/DBCheck')
-def DBCheck():
+@app.route("/DBCheck")
+def dbCheck():
     try:
-        cur = mysql.connection.cursor()
-        cur.execute("Select 1")
-        return jsonify({'status': 'ok','message': 'Conexion exitosa a la base de datos'}), 200
-    except MySQLdb.MySQLError  as e:
-        return jsonify({'status': 'error','message':str (e)}), 500
-    #excepcion de contraseña incorrecta
-    except MySQLdb.OperationalError as e:
-        return jsonify({'status': 'error','message': 'Error de conexión a la base de datos: ' + str(e)}), 500
-    #excepcion de base de datos no encontrada
-    except MySQLdb.DatabaseError as e:
-        return jsonify({'status': 'error','message': 'Base de datos no encontrada: ' + str(e)}), 500
-    #excepcion usurio incorrecto
-    except MySQLdb.ProgrammingError as e:
-        return jsonify({'status': 'error','message': 'Usuario o contraseña incorrectos: ' + str(e)}), 500
-    #excepcion host in9correcto
-    except MySQLdb.InterfaceError as e:
-        return jsonify({'status': 'error','message': 'Host incorrecto: ' + str(e)}), 500
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT 1")
+        return jsonify({"status": "Ok", "message": "Conectado con éxito"}), 200
+    except MySQLdb.MySQLError as e:
+        return jsonify({"status": "Error", "message": str(e)}), 500
 
-if __name__ == '__main__':
-    app.run(port=3000, debug=True)
-    
-    
-
-
-#ruta simple
-@app.route('/')
+@app.route("/")
 def home():
-    return '¡Hola, Flask!'
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT id, nombre_album FROM tb_albums")
+    albums = cursor.fetchall()
+    cursor.close()
+    return render_template("formulario.html", albums=albums)
 
-#ruta con un parámetro
-@app.route('/saludo/<nombre>')
-def saludo(nombre):
-    return f'¡Hola, {nombre}!'
+@app.route("/consulta")
+def consulta():
+    return render_template("consulta.html")
 
-#ruta try-catch
-@app.errorhandler(404)
-def paginaNoE(e):
-    return 'Página no encontradota', 404
-
-#ruta doble
-@app.route('/usuario')
-@app.route('/usuaria')
-def dobleroute():
-    return 'Soy el mismo recurso del servidor'
+@app.route("/saludar/<nombre>")
+def saludar(nombre):
+    return f"¡Hola {nombre}!"
 
 @app.errorhandler(404)
-def metodonoP(e):
-    return 'Revisa el metodo de envio de tu ruta (GET o POST) !!!', 405
+def paginaNoEncontrada(e):
+    return "¡Cuidado, error de capa 8!", 404
 
-#ruta POST
-@app.route('/formulario', methods=['POST'])
-def formulario():
-    return 'Soy un formulario'
+@app.errorhandler(405)
+def error505(e):
+    return "¡Revisa el método de envío!", 405
+
+@app.route("/usuario")
+@app.route("/usuaria")
+def dobleRoute():
+    return "Soy el mismo recurso del servidor"
+
+@app.route("/guardarAlbum", methods=["POST"])
+def guardar():
+    errores = {}
+
+    titulo = request.form.get("txtTitulo", "").strip()
+    artista = request.form.get("txtArtista", "").strip()
+    year = request.form.get("txtYear", "").strip()
+
+    if not titulo:
+        errores["txtTitulo"] = "Nombre del álbum obligatorio"
+    if not artista:
+        errores["txtArtista"] = "Artista obligatorio"
+    if not year:
+        errores["txtYear"] = "Año de publicación obligatorio"
+    elif not year.isdigit() or int(year) not in range(1800, 2101):
+        errores["txtYear"] = "Ingresa un año válido"
+
+    if not errores:
+        try:
+            cursor = mysql.connection.cursor()
+            cursor.execute("""
+                INSERT INTO tb_albums (nombre_album, nombre_artista, anio_lanzamiento)
+                VALUES (%s, %s, %s);
+            """, (titulo, artista, year))
+            mysql.connection.commit()
+            flash("El álbum se guardó en la base de datos")
+            return redirect(url_for("home"))
+        except Exception as e:
+            mysql.connection.rollback()
+            flash(f"Algo falló: {e}")
+            return redirect(url_for("home"))
+        finally:
+            cursor.close()
+
+    return render_template("formUpdate.html", err=errores)
+    
+
+    
+@app.route("/detalle/<int:id>")
+def detalle(id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM tb_albums WHERE id = %s", (id,))
+    album = cursor.fetchone()
+    cursor.close()
+    return render_template("consulta.html", album=album)
+
+
+
+
+
+
+@app.route("/formUpdate/<int:id>")
+def form_update(id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM tb_albums WHERE id = %s", (id,))
+    album = cursor.fetchone()
+    cursor.close()
+    if album:
+        return render_template("formUpdate.html", album=album)
+    else:
+        flash("Álbum no encontrado")
+        return redirect(url_for("home"))
+
+
+@app.route("/actualizarAlbum", methods=["POST"])
+def actualizar_album():
+    id_album = request.form["id"]
+    titulo = request.form["titulo"]
+    artista = request.form["artista"]
+    anio = request.form["anio"]
+
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute("""
+            UPDATE tb_albums 
+            SET nombre_album = %s, nombre_artista = %s, anio_lanzamiento = %s 
+            WHERE id = %s
+        """, (titulo, artista, anio, id_album))
+        mysql.connection.commit()
+        flash("Álbum actualizado correctamente")
+    except Exception as e:
+        mysql.connection.rollback()
+        flash(f"Error al actualizar: {e}")
+    finally:
+        cursor.close()
+
+    return redirect(url_for("home"))
+
+
+
+
+if __name__ == "__main__":
+    app.run(port=3000, debug=True)
