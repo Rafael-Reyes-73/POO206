@@ -114,6 +114,20 @@ def form_update(id):
         return redirect(url_for("home"))
 
 
+
+@app.route("/formElimi/<int:id>")
+def form_elimi(id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM tb_albums WHERE id = %s", (id,))
+    album = cursor.fetchone()
+    cursor.close()
+    if album:
+        return render_template("formElimi.html", album=album)
+    else:
+        flash("Álbum no encontrado")
+        return redirect(url_for("home"))
+
+
 @app.route("/actualizarAlbum", methods=["POST"])
 def actualizar_album():
     id_album = request.form["id"]
@@ -125,7 +139,7 @@ def actualizar_album():
         cursor = mysql.connection.cursor()
         cursor.execute("""
             UPDATE tb_albums 
-            SET nombre_album = %s, nombre_artista = %s, anio_lanzamiento = %s 
+            SET nombre_album = %s, nombre_artista = %s, anio_lanzamiento = %s
             WHERE id = %s
         """, (titulo, artista, anio, id_album))
         mysql.connection.commit()
@@ -139,6 +153,27 @@ def actualizar_album():
     return redirect(url_for("home"))
 
 
+@app.route("/eliminarAlbum", methods=["POST"])
+def eliminar_album():
+    
+    album_id = request.form["id"] 
+    
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute("""
+            UPDATE tb_albums
+            SET state = 0 WHERE id = %s
+            """, (album_id,))
+        
+        mysql.connection.commit()
+        flash("Álbum eliminado correctamente")
+    except Exception as e:
+        mysql.connection.rollback()
+        flash(f"Error al eliminar: {e}")
+    finally:
+        cursor.close()
+
+    return redirect(url_for("home"))
 
 
 if __name__ == "__main__":
