@@ -17,7 +17,7 @@ C = 1
 
 for i in range(numero):
     C += 1
-    if C % 2 == 0:
+if C % 2 == 0:
         vec.append(C)
 
 print("Lista de números pares:", vec)

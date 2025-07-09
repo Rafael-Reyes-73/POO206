@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard QroHuerto</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <style>
+    .gradient-border {
+      border: 4px solid;
+      border-image: linear-gradient(45deg,
+        rgba(241, 73, 92, 0.5),
+        rgba(255, 208, 0, 0.5),
+        rgba(96, 255, 118, 0.5),
+        rgba(50, 156, 211, 0.5)
+      ) 1;
+      background-color: white;
+      transition: transform 0.3s ease;
+      height: 100%;
+    }
+
+    .gradient-border:hover {
+      transform: scale(1.05);
+      cursor: pointer;
+    }
+
+    .table thead {
+      background: linear-gradient(45deg,
+        rgba(241, 73, 92, 0.5),
+        rgba(251, 237, 32, 0.5),
+        rgba(96, 255, 118, 0.5),
+        rgba(50, 156, 211, 0.5));
+    }
+
+    .dashboard-section {
+      display: none;
+      margin-top: 2rem;
+    }
+
+    .action-buttons button {
+      margin-right: 5px;
+    }
+
+    body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: linear-gradient(to top, 
+    rgba(255,255,255,1) 0%,       
+    rgba(255,255,255,0.95) 60%,   
+    rgba(255,255,255,0.3) 85%,    
+    rgba(255,255,255,0) 100%      
+), 
+                url('./img/QroHu4.png') no-repeat center center fixed;
+    background-size: cover;
+  }
+
+  .navbar-custom {
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .navbar-brand img {
+    height: 40px;
+    width: auto;
+  }
+
+  .nav-link {
+    font-weight: 500;
+    color: #333 !important;
+  }
+
+  .nav-link:hover {
+    color: #007bff !important;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+
+
+<nav class="navbar navbar-expand-lg navbar-light navbar-custom">
+  <div class="container">
+
+    <a class="navbar-brand" href="#">
+      <img src="../static/QroHu2.png" alt="Logo" />
+    </a>
+
+    
+  </div>
+</nav>
+
+<body class="bg-light">
+
+
+  <div class="container py-5">
+    <h1 class="mb-4 text-center">Inicio</h1>
+    <div class="row g-4 text-center">
+      
+      <!-- Tarjetas del Inicio para seleccionar formulario -->
+      <div class="col-md-3">
+        
+        <div class="card gradient-border" onclick="Vista('usuarios')">
+          <div class="card-body">
+            <h5 class="card-title">Usuarios Registrados</h5>
+            <p class="card-text fs-4">1</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-3">
+        <div class="card gradient-border" onclick="Vista('admins')">
+          <div class="card-body">
+            <h5 class="card-title">Administradores Activos</h5>
+            <p class="card-text fs-4">15</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-3">
+        <div class="card gradient-border" onclick="Vista('semillas')">
+          <div class="card-body">
+            <h5 class="card-title">Semillas Cargadas</h5>
+            <p class="card-text fs-4">78</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-3">
+        <div class="card gradient-border" onclick="Vista('tutoriales')">
+          <div class="card-body">
+            <h5 class="card-title">Tutoriales Activos</h5>
+            <p class="card-text fs-4">12</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    {% with mensajes = get_flashed_messages() %}
+      {% if mensajes %}
+        <script>
+          Swal.fire({
+            icon: 'success', 
+            title: 'Mensaje',
+            text: "{{ mensajes[0] }}",
+            showConfirmButton: true
+          });
+        </script>
+      {% endif %}
+    {% endwith %}
+
+    {% if errores and errores.camposVacios %}
+      <script>
+        Swal.fire({
+          icon: 'error', 
+          title: 'Error',
+          text: "{{ errores.camposVacios }}",
+          showConfirmButton: true
+        });
+      </script>
+    {% endif %}
+
+    {% if errores and errores.semillaDuplicada %}
+      <script>
+        Swal.fire({
+          title: "Semilla duplicada",
+          text: "{{ errores.semillaDuplicada }}",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Sobreescribir"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            document.getElementById("sobreescribirS").submit();
+          }
+        });
+      </script>
+    {% endif %}
+
+    {% if errores and errores.errorInterno %}
+      <script>
+        Swal.fire({
+          icon: 'error', 
+          title: 'Error',
+          text: "{{ errores.errorInterno }}",
+          showConfirmButton: true
+        });
+      </script>
+    {% endif %}
+
+
+    <!-- Sección de formularios -->
+
+    <!-- Gestión de Usuarios -->
+
+<div id="usuarios" class="dashboard-section">
+  <h3 class="mt-5">Gestión de Usuarios</h3>
+
+  
+ <form class="row g-3 mt-3 mb-4" action="/guardarUsuario" method="POST">
+
+    
+
+    <div class="col-md-4">
+      <input type = "text" class="form-control" name="txtNombre" placeholder="Nombre " value="{{ request.form.txtNombre }}">
+       {% if errores and  errores.txtNombre %}
+            <p style="color:red">{{errores.txtNombre}}</p> 
+        {% endif %}
+    </div>
+
+     <div class="col-md-4">
+      <input type = "text" class="form-control" name="txtCorreo" placeholder="Correo Electrónico " value="{{ request.form.txtCorreo }}">
+       {% if errores and errores.txtCorreo %}
+            <p style="color:red">{{errores.txtCorreo}}</p> 
+        {% endif %}
+    </div>
+
+
+    <div class="col-md-4">
+      <input type = "text" class="form-control" name="txtContrasena" placeholder="Contraseña " value="{{ request.form.txtContrasena }}">
+       {% if errores and  errores.txtContrasena%}
+            <p style="color:red">{{errores.txtContrasena}}</p> 
+        {% endif %}
+    </div>
+
+
+     <div class="col-md-4">
+      <input type = "text" class="form-control" name="txtTelefono" placeholder="Teléfono" value="{{ request.form.txtTelefono }}">
+       {% if errores and errores.txtTelefono %}
+            <p style="color:red">{{errores.txtTelefono}}</p> 
+        {% endif %}
+    </div>
+
+    </div>
+
+
+    
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-success">Guardar Usuario</button>
+    </div>
+    
+  </form>
+
+  
+  <table class="table table-bordered">
+    
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Teléfono</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for u in usuarios %}
+        <tr>
+          <td>{{u.0}}</td>
+          <td>{{u.1}}</td>
+          <td>{{u.2}}</td>
+          <td>{{u.4}}</td>
+
+          <td class="action-buttons">
+            <button class="btn btn-warning btn-sm">Editar</button>
+            <button class="btn btn-danger btn-sm">Eliminar</button>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+  </table>
+</div>
+
+
+
+<!-- Administradores Activos -->
+
+<div id="admins" class="dashboard-section">
+  <h3 class="mt-5">Administradores Activos</h3>
+
+
+  <form class="row g-3 mt-3 mb-4" action="/guardarAdmin" method="POST">
+
+  <div class="col-md-4">
+      <input type = "text" class="form-control" name="txtNombreAdmin" placeholder="Nombre " value="{{ request.form.txtNombreAdmin }}">
+       {% if errores and  errores.txtNombreAdmin%}
+            <p style="color:red">{{errores.txtNombreAdmin}}</p> 
+        {% endif %}
+    </div>  
+
+    <div class="col-md-4">
+      <input type = "text" class="form-control" name="txtCorreoAdmin" placeholder="Correo " value="{{ request.form.txtCorreoAdmin }}">
+       {% if errores and  errores.txtCorreoAdmin%}
+            <p style="color:red">{{errores.txtCorreoAdmin}}</p> 
+        {% endif %}
+    </div>  
+
+    <div class="col-md-4">
+      <input type = "text" class="form-control" name="txtContrasenaAdmin" placeholder="Contraseña " value="{{ request.form.txtContrasenaAdmin }}">
+       {% if errores and  errores.txtContrasenaAdmin %}
+            <p style="color:red">{{errores.txtContrasenaAdmin}}</p> 
+        {% endif %}
+    </div>  
+
+
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-success">Agregar Administrador</button>
+    </div>
+
+  </form>
+
+  
+  <table class="table table-bordered">
+    <thead>
+
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Cargo</th>
+        <th>Acciones</th>
+      </tr>
+
+    </thead>
+
+    <tbody>
+      {% for admin in administradores%}
+        <tr>
+          <td>{{admin.0}}</td>
+          <td>{{admin.1}}</td>
+          <td>{{admin.2}}</td>
+          <td>{{admin.4}}</td>
+          <td class="action-buttons">
+            <button class="btn btn-warning btn-sm">Editar</button>
+            <button class="btn btn-danger btn-sm">Eliminar</button>
+          </td>
+        </tr>
+      {% endfor%}
+    </tbody>
+  </table>
+</div>
+
+
+
+
+<!-- Gestión de Semillas -->
+
+<div id="semillas" class="dashboard-section">
+  <h3 class="mt-5">Gestión de Semillas</h3>
+
+  <form class="row g-3 mt-3 mb-4" enctype="multipart/form-data" action="{{ url_for('agregarSemilla') }}" method="POST">
+
+    <div class="col-md-3">
+      <input type="text" class="form-control" placeholder="Nombre" name="nombre_semilla" required >
+    </div>
+
+    <div class="col-md-3">
+      <input type="text" class="form-control" placeholder="Espacio" name="espacio" required >
+    </div>
+
+    <div class="col-md-2">
+      <input type="text" class="form-control" placeholder="URL Imagen" name="imagen_semilla" required>
+    </div>
+
+    
+
+    <div class="col-md-2">
+      <input type="text" class="form-control" placeholder="Clave Vitamina" name="vitamina" required>
+    </div>
+
+    
+
+    <div class="col-md-2">
+      <input type="text" class="form-control" placeholder="Clave Municipio" name="municipio" required>
+    </div>
+
+    
+
+    <div class="col-md-2">
+      <input type="text" class="form-control" placeholder="Clave Tipo" name="tipo_semilla" required>
+    </div>
+
+    
+
+    <div class="col-md-3">
+      <input type="text" class="form-control" placeholder="Clave Fertilizante" name="fertilizante" required>
+    </div>
+
+    
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-success">Agregar Semilla</button>
+    </div>
+  </form>
+
+  <form id="sobreescribirS" action="/sobreescribir_semilla" method="POST"></form>
+
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Imagen</th>
+        <th>Espacio</th>
+        <th>Imagen_URL</th>
+        <th>Clave_Vitamina</th>
+        <th>Clave_Municipio</th>
+        <th>Clave_Tipo</th>
+        <th>Clave_Fertilizantes</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for sem in semillas %}
+        <tr>
+          <td>{{sem.0}}</td>
+          <td>{{sem.1}}</td>
+          <td><img src="{{ url_for('static', filename=sem.3) }}" alt="Imagen de {{sem.1}}" width="60">
+          <td>{{sem.2}}</td>
+          <td>{{sem.3}}</td>
+          <td>{{sem.4}}</td>
+          <td>{{sem.5}}</td>
+          <td>{{sem.6}}</td>
+          <td>{{sem.7}}</td>
+          <td class="action-buttons">
+            <button class="btn btn-warning btn-sm">Editar</button>
+            <button class="btn btn-danger btn-sm">Eliminar</button>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Tutoriales Activos -->
+
+<div id="tutoriales" class="dashboard-section">
+  <h3 class="mt-5">Tutoriales Activos</h3>
+
+  <form class="row g-3 mt-3 mb-4" action="" method="POST">
+    
+  
+
+    <div class="col-md-4">
+      <input type="text" class="form-control" placeholder="Nombre del vídeo" name="nombre_video" required>
+
+      {% if errores and errores.nombre_video %}
+        <div class="alert alert-danger mt-2 py-2 px-3" role="alert">
+          {{ errores.nombre_video }}
+        </div>
+      {% endif %}
+
+    </div>
+
+    <div class="col-md-4">
+      <input type="text" class="form-control" placeholder="Descripción" name="descripcion_video" required>
+
+      {% if errores and errores.descripcion_video %}
+        <div class="alert alert-danger mt-2 py-2 px-3" role="alert">
+          {{ errores.descripcion_video }}
+        </div>
+      {% endif %}
+
+    </div>
+
+    <div class="col-md-3">
+      <input type="text" class="form-control" placeholder="URL" name="URL_video" required>
+
+      {% if errores and errores.URL_video %}
+        <div class="alert alert-danger mt-2 py-2 px-3" role="alert">
+          {{ errores.URL_video }}
+        </div>
+      {% endif %}
+
+    </div>
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-success">Agregar Tutorial</button>
+
+    </div>
+
+  </form>
+
+  
+  <table class="table table-bordered">
+    
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Título</th>
+        <th>Descripción</th>
+        <th>URL</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for tuto in tutoriales %}
+        <tr>
+          <td>{{tuto.0}}</td>
+          <td>{{tuto.1}}</td>
+          <td>{{tuto.2}}</td>
+          <td><a href="{{tuto.3}}">{{tuto.3}}</a></td>
+          <td class="action-buttons">
+            <button class="btn btn-warning btn-sm">Editar</button>
+            <button class="btn btn-danger btn-sm">Eliminar</button>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+<!-- MODAL PARA SOBREESCRIBIR SEMILLA -->
+<div class="modal fade" id="modalSobreescribir" tabindex="-1" aria-labelledby="modalSobreescribirLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <form action="{{ url_for('sobreescribirSemilla') }}" method="POST">
+
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalSobreescribirLabel">Semilla Duplicada</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+
+        <div class="modal-body">
+          Ya existe una semilla con el mismo nombre. ¿Deseas sobreescribir su información?
+        </div>
+
+        {% if session.get('sobreescribirSemilla') %}
+          {% set valores = session.get('sobreescribirSemilla') %}
+          <input type="hidden" name="nombre" value="{{ valores[0] }}">
+          <input type="hidden" name="espacio" value="{{ valores[1] }}">
+          <input type="hidden" name="imagen" value="{{ valores[2] }}">
+          <input type="hidden" name="vitamina" value="{{ valores[3] }}">
+          <input type="hidden" name="municipio" value="{{ valores[4] }}">
+          <input type="hidden" name="tipo" value="{{ valores[5] }}">
+          <input type="hidden" name="fertilizante" value="{{ valores[6] }}">
+        {% endif %}
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Sobreescribir</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+  <script>
+    function Vista(id) {
+      document.querySelectorAll('.dashboard-section').forEach((section) => {
+        section.style.display = 'none';
+      });
+      document.getElementById(id).style.display = 'block';
+      document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const vista = "{{ session.get('vista_activa', '') }}";
+      if(vista){
+        Vista(vista);
+      }
+    });
+
+    
+  </script>
+</body>
+</html>

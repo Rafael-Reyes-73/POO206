@@ -6,3 +6,5 @@ for C in range(201):
     elif C%5==0 or C==200:
         lista.append(C)   
 print(lista)
+
+
