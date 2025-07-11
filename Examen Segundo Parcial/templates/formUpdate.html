@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Actualizar</title></head>
+<body>
+<h2>Actualizar Pelicula</h2>
+
+{% with mensajes = get_flashed_messages() %}
+    {% if mensajes %}
+        {% for m in mensajes %}
+            <div>{{ m }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<form action="{{ url_for('actualizar_pelicula') }}" method="POST">
+    <input type="hidden" name="id" value="{{ pelicula[0] }}">
+    <label>Título:</label>
+    <input type="text" name="titulo" value="{{ pelicula[1] }}"><br>
+    {% if errores and errores.titulo %}<div>{{ errores.titulo }}</div>{% endif %}
+    <label>Director:</label>
+    <input type="text" name="director" value="{{ pelicula[2] }}"><br>
+    {% if errores and errores.director %}<div>{{ errores.director }}</div>{% endif %}
+    <label>Año:</label>
+    <input type="number" name="anio" value="{{ pelicula[3] }}"><br>
+    {% if errores and errores.anio %}<div>{{ errores.anio }}</div>{% endif %}
+    <label>Genero:</label>
+    <input type="text" name="genero" value="{{ pelicula[4] }}"><br>
+    {% if errores and errores.genero %}<div>{{ errores.genero }}</div>{% endif %}
+    <button type="submit">Actualizar</button>
+</form>
+<a href="{{ url_for('home') }}">Volver</a>
+</body>
+</html>

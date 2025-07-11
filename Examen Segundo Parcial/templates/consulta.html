@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Detalle</title></head>
+<body>
+
+<h2>Detalle del Pelicula</h2>
+
+{% if pelicula %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Director</th>
+                <th>Año</th>
+                <th>Genero</th>
+                <th>Actualizar</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ pelicula[0] }}</td>
+                <td>{{ pelicula[1] }}</td>
+                <td>{{ pelicula[2] }}</td>
+                <td>{{ pelicula[3] }}</td>
+                <td>{{ pelicula[4] }}</td>
+                <td><a href="{{ url_for('form_update', id=pelicula[0]) }}">Actualizar</a></td>
+                <td><a href="{{ url_for('form_elimi', id=pelicula[0]) }}">Eliminar</a></td>
+            </tr>
+        </tbody>
+    </table>
+{% else %}
+    <p>Pelicula no encontrado.</p>
+{% endif %}
+
+<br>
+<a href="{{ url_for('home') }}">Volver al inicio</a>
+
+</body>
+</html>

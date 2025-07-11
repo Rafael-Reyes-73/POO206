@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Eliminar</title></head>
+<body>
+<h2>¿Eliminar "{{ pelicula[1] }}"?</h2>
+<form action="{{ url_for('eliminar_pelicula') }}" method="POST">
+    <input type="hidden" name="id" value="{{ pelicula[0] }}">
+    <button type="submit">Confirmar eliminación</button>
+</form>
+<a href="{{ url_for('home') }}">Cancelar</a>
+</body>
+</html>

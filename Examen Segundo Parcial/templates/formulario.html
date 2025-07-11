@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><title>Peliculas</title></head>
+<body>
+<h2>Agregar Peliculas</h2>
+{% with mensajes = get_flashed_messages() %}
+    {% if mensajes %}
+        {% for m in mensajes %}
+            <div>{{ m }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<form action="/guardarPelicula" method="POST">
+    <input type="text" name="titulo" placeholder="Título" value="{{ request.form.titulo }}">
+    {% if errores and errores.titulo %}<div>{{ errores.titulo }}</div>{% endif %}
+
+    <input type="text" name="director" placeholder="Airector" value="{{ request.form.director }}">
+    {% if errores and errores.director %}<div>{{ errores.director }}</div>{% endif %}
+
+    <input type="number" name="anio" placeholder="Año" value="{{ request.form.anio }}">
+    {% if errores and errores.anio %}<div>{{ errores.anio }}</div>{% endif %}
+
+    <input type="text" name="genero" placeholder="Genero" value="{{ request.form.genero }}">
+    {% if errores and errores.genero %}<div>{{ errores.genero }}</div>{% endif %}
+
+    <button type="submit">Guardar</button>
+</form>
+
+
+<h3>Lista de pelicula</h3>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Ver detalles</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for pelicula in pelicula %}
+        <tr>
+            <td>{{ pelicula[0] }}</td>
+            <td>{{ pelicula[1] }}</td>
+            <td><a href="{{ url_for('detalle', id=pelicula[0]) }}">Ver</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+</body>
+</html>
