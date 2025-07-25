@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalles del Álbum</title>
+</head>
+<body>
+    <h2>Detalles del Álbum</h2>
+<a href="{{ url_for('consulta') }}">< Volver al formulario</a>
+    {% if album %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Álbum</th>
+                    <th>Artista</th>
+                    <th>Año</th>
+                    <th>Actualizar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ album[0] }}</td>
+                    <td>{{ album[1] }}</td>
+                    <td>{{ album[2] }}</td>
+                    <td>{{ album[3] }}</td>
+                    <td><a href="{{ url_for('form_update', id=album[0]) }}">Actualizar</a></td>
+                    <td><a href="{{ url_for('form_elimi', id=album[0]) }}">Eiminar</a></td>
+                </tr>
+            </tbody>
+        </table>
+    {% else %}
+        <p>Álbum no encontrado.</p>
+    {% endif %}
+
+    
+</body>
+</html>
